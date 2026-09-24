@@ -16,9 +16,9 @@ export async function createContact(req, res, next) {
       return res.status(400).json({ message: "Please provide a little more detail." });
     }
 
-    if (!process.env.MONGODB_URI) {
+    if (!process.env.MONGODB_URI || Contact.db.readyState !== 1) {
       return res.status(503).json({
-        message: "Contact service is not configured yet. Please connect MongoDB on the server."
+        message: "Contact service is temporarily unavailable. Please try again later."
       });
     }
 

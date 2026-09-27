@@ -46,7 +46,7 @@ function Hero() {
         <Reveal className="hero-copy">
           <div className="eyebrow"><span className="status-dot" /> Available for opportunities</div>
           <p className="kicker">FULL STACK DEVELOPER · MERN</p>
-          <h1>Hi, I'm <span>Abhishek Rajbhar</span></h1>
+          <h1>Hi,I'm <span>Abhishek Rajbhar</span></h1>
           <p className="hero-subtitle">Full Stack Web Developer <b>|</b> MERN Stack</p>
           <p className="hero-text">I build modern, responsive, and scalable web applications with clean code and a focus on great user experiences.</p>
           <div className="hero-actions">

@@ -1,10 +1,10 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
-  FiArrowUpRight, FiGithub, FiLinkedin, FiDownload, FiMapPin,
+  FiArrowUpRight, FiGithub, FiLinkedin, FiMapPin,
   FiMail, FiMenu, FiX, FiExternalLink, FiSend, FiCode,
-  FiDatabase, FiServer, FiTool
+  FiDatabase, FiServer, FiTool, FiCopy, FiCheck
 } from "react-icons/fi";
-import { profile, skills, projects } from "./data";
+import { profile, skills, projects, certificates } from "./data";
 
 const skillIcons = { Frontend: FiCode, Backend: FiServer, "Database & Cloud": FiDatabase, Tools: FiTool };
 
@@ -14,7 +14,7 @@ function Reveal({ children, className = "" }) {
 
 function Navbar() {
   const [open, setOpen] = useState(false);
-  const links = ["About", "Skills", "Projects", "Education", "Contact"];
+  const links = ["About", "Skills", "Projects", "Education", "Certificates", "Contact"];
   return (
     <header className="nav-wrap">
       <nav className="nav container">
@@ -22,7 +22,7 @@ function Navbar() {
           <span className="brand-mark">AR</span>
           <span>Abhishek<span className="brand-dot">.</span></span>
         </a>
-        <button className="menu-btn" aria-label="Toggle navigation" onClick={() => setOpen(!open)}>
+        <button className="menu-btn" aria-label="Toggle navigation" aria-expanded={open} onClick={() => setOpen(!open)}>
           {open ? <FiX /> : <FiMenu />}
         </button>
         <div className={`nav-links ${open ? "open" : ""}`}>
@@ -51,7 +51,7 @@ function Hero() {
           <p className="hero-text">I build modern, responsive, and scalable web applications with clean code and a focus on great user experiences.</p>
           <div className="hero-actions">
             <a className="btn primary" href="#projects">View My Projects <FiArrowUpRight /></a>
-            <a className="btn ghost" href="/Abhishek-Rajbhar-Resume.pdf" download>Download Resume <FiDownload /></a>
+            <a className="btn ghost" href="/Abhishek-Rajbhar-Resume.html" target="_blank" rel="noreferrer">View Resume <FiExternalLink /></a>
           </div>
           <div className="hero-meta">
             <span><FiMapPin /> {profile.location}</span>
@@ -129,14 +129,14 @@ function ProjectCard({ project, featured }) {
     <div className="project-top">
       <span className="project-number">{project.number}</span>
       <div className="project-links">
-        {project.github !== "#" && <a href={project.github} target="_blank" rel="noreferrer" aria-label="GitHub"><FiGithub /></a>}
-        {project.live !== "#" && <a href={project.live} target="_blank" rel="noreferrer" aria-label="Live demo"><FiExternalLink /></a>}
+        {project.github && <a href={project.github} target="_blank" rel="noreferrer" aria-label="GitHub"><FiGithub /></a>}
+        {project.live && <a href={project.live} target="_blank" rel="noreferrer" aria-label="Live demo"><FiExternalLink /></a>}
       </div>
     </div>
     <div className="project-visual">
       <div className="project-window">
         <div className="window-bar"><i/><i/><i/></div>
-        <div className="window-content"><span>WANDER</span><strong>{project.title}</strong><small>EXPLORE · DISCOVER · STAY</small></div>
+        <div className="window-content"><span>{project.stack[0].toUpperCase()}</span><strong>{project.title}</strong><small>{project.stack.slice(0, 3).join(" · ").toUpperCase()}</small></div>
       </div>
     </div>
     <p className="project-label">{project.label}</p>
@@ -144,10 +144,10 @@ function ProjectCard({ project, featured }) {
     <p className="project-description">{project.description}</p>
     <ul>{project.features.map(f => <li key={f}>{f}</li>)}</ul>
     <div className="stack-row">{project.stack.map(s => <span key={s}>{s}</span>)}</div>
-    <div className="project-actions">
-      {project.live !== "#" ? <a className="text-link" href={project.live} target="_blank" rel="noreferrer">Live Demo <FiArrowUpRight /></a> : <span className="text-link muted">Live Demo <FiArrowUpRight /></span>}
-      {project.github !== "#" ? <a className="text-link" href={project.github} target="_blank" rel="noreferrer">GitHub <FiGithub /></a> : <span className="text-link muted">GitHub <FiGithub /></span>}
-    </div>
+    {(project.live || project.github) && <div className="project-actions">
+      {project.live && <a className="text-link" href={project.live} target="_blank" rel="noreferrer">Live Demo <FiArrowUpRight /></a>}
+      {project.github && <a className="text-link" href={project.github} target="_blank" rel="noreferrer">GitHub <FiGithub /></a>}
+    </div>}
   </Reveal>;
 }
 
@@ -176,6 +176,58 @@ function Education() {
   </section>;
 }
 
+function CertificateCard({ certificate }) {
+  const [copyState, setCopyState] = useState("idle");
+  const dialogRef = useRef(null);
+
+  async function copyCredentialId() {
+    try {
+      await navigator.clipboard.writeText(certificate.credentialId);
+      setCopyState("copied");
+      window.setTimeout(() => setCopyState("idle"), 1800);
+    } catch {
+      setCopyState("failed");
+    }
+  }
+
+  return <Reveal className="certificate-card glass">
+    <div className="certificate-mark">CERTIFICATE OF COMPLETION</div>
+    <p className="certificate-issuer">{certificate.issuer}</p>
+    <h3>{certificate.title}</h3>
+    {certificate.issued && <p className="certificate-date">Issued {certificate.issued}</p>}
+    <p className="certificate-id"><span>Credential ID</span><code>{certificate.credentialId}</code></p>
+    <div className="certificate-actions">
+      <button className="text-link view-certificate" type="button" onClick={() => dialogRef.current?.showModal()}>View certificate <FiArrowUpRight /></button>
+    </div>
+    <dialog ref={dialogRef} className="certificate-dialog" onClick={event => { if (event.target === event.currentTarget) event.currentTarget.close(); }}>
+      <div className="certificate-dialog-content">
+        <button className="certificate-dialog-close" type="button" aria-label="Close certificate details" onClick={() => dialogRef.current?.close()}><FiX /></button>
+        <p className="certificate-mark">CERTIFICATE OF COMPLETION</p>
+        <p className="certificate-issuer">{certificate.issuer}</p>
+        <h2>{certificate.title}</h2>
+        {certificate.issued && <p className="certificate-date">Issued {certificate.issued}</p>}
+        <p className="certificate-id"><span>Credential ID</span><code>{certificate.credentialId}</code></p>
+        <div className="certificate-actions">
+          {certificate.verifyUrl && <a className="text-link" href={certificate.verifyUrl} target="_blank" rel="noreferrer">Verify certificate <FiExternalLink /></a>}
+          <button className="text-link copy-certificate" type="button" onClick={copyCredentialId}>
+            {copyState === "copied" ? <><FiCheck /> Copied</> : <><FiCopy /> Copy ID</>}
+          </button>
+        </div>
+        {copyState === "failed" && <p className="copy-status" role="status">Clipboard access is unavailable.</p>}
+      </div>
+    </dialog>
+  </Reveal>;
+}
+
+function Certificates() {
+  return <section id="certificates" className="section section-alt">
+    <div className="container">
+      <Reveal className="section-head"><span>05 / CERTIFICATES</span><h2>Learning, <i>recognized.</i></h2></Reveal>
+      <div className="certificates-grid">{certificates.map(certificate => <CertificateCard key={certificate.credentialId} certificate={certificate} />)}</div>
+    </div>
+  </section>;
+}
+
 function Contact() {
   const [form, setForm] = useState({ name: "", email: "", message: "" });
   const [state, setState] = useState({ loading: false, message: "" });
@@ -184,7 +236,8 @@ function Contact() {
     e.preventDefault();
     setState({ loading: true, message: "" });
     try {
-      const res = await fetch(`${import.meta.env.VITE_API_URL || "http://localhost:5000/api"}/contact`, {
+      const apiBaseUrl = (import.meta.env.VITE_API_URL || (import.meta.env.DEV ? "http://localhost:5000/api" : "/api")).replace(/\/+$/, "");
+      const res = await fetch(`${apiBaseUrl}/contact`, {
         method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(form)
       });
       const data = await res.json();
@@ -201,7 +254,7 @@ function Contact() {
     <div className="container">
       <Reveal className="contact-wrap glass">
         <div className="contact-copy">
-          <span>05 / CONTACT</span>
+          <span>06 / CONTACT</span>
           <h2>Let's Build Something <i>Great Together.</i></h2>
           <p>Have a project, opportunity, or idea worth exploring? Send a message and let's start a conversation.</p>
           <div className="socials">
@@ -235,5 +288,5 @@ export default function App() {
     return () => observer.disconnect();
   }, []);
 
-  return <><Navbar/><main><Hero/><About/><Skills/><Projects/><Education/><Contact/></main><Footer/></>;
+  return <><Navbar/><main><Hero/><About/><Skills/><Projects/><Education/><Certificates/><Contact/></main><Footer/></>;
 }

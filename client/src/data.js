@@ -43,7 +43,31 @@ export const projects = [
       "RESTful API design",
       "MongoDB and MySQL integration"
     ],
-    live: "#",
-    github: "#"
+    live: null,
+    github: null
+  }
+];
+
+export const certificates = [
+  {
+    title: "ChatGPT for Students Course",
+    issuer: "Bharat AI Initiative · HCL GUVI · Powered by OpenAI",
+    issued: "September 20, 2026",
+    credentialId: "zjA901997f3b080sy9",
+    verifyUrl: "https://www.guvi.in/certificate?id=zjA901997f3b080sy9"
+  },
+  {
+    title: "Alpha · DSA with Java",
+    issuer: "Apna College",
+    issued: null,
+    credentialId: "67b1b65e03d8b90e5e093b47",
+    verifyUrl: null
+  },
+  {
+    title: "Delta · Full Stack Web Development",
+    issuer: "Apna College",
+    issued: null,
+    credentialId: "6aacd73af764da7d470a7988",
+    verifyUrl: null
   }
 ];

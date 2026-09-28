@@ -4,6 +4,7 @@ import {
   FiMail, FiMenu, FiX, FiExternalLink, FiSend, FiCode,
   FiDatabase, FiServer, FiTool, FiCopy, FiCheck
 } from "react-icons/fi";
+import AIOrb from "./components/ai/AIOrb";
 import { profile, skills, projects, certificates } from "./data";
 
 const skillIcons = { Frontend: FiCode, Backend: FiServer, "Database & Cloud": FiDatabase, Tools: FiTool };
@@ -40,14 +41,12 @@ function Hero() {
   return (
     <section id="home" className="hero">
       <div className="hero-grid" />
-      <div className="orb orb-one" />
-      <div className="orb orb-two" />
       <div className="container hero-inner">
         <Reveal className="hero-copy">
           <div className="eyebrow"><span className="status-dot" /> Available for opportunities</div>
           <p className="kicker">FULL STACK DEVELOPER · MERN</p>
-          <h1>Hi,I'm <span>Abhishek Rajbhar</span></h1>
-          <p className="hero-subtitle">Full Stack Web Developer <b>|</b> MERN Stack</p>
+          <h1>Hi, I&apos;m <span>ABHISHEK RAJBHAR</span></h1>
+          <p className="hero-subtitle"><span>Full Stack Web Developer</span> <b>|</b> <span>MERN Stack</span></p>
           <p className="hero-text">I build modern, responsive, and scalable web applications with clean code and a focus on great user experiences.</p>
           <div className="hero-actions">
             <a className="btn primary" href="#projects">View My Projects <FiArrowUpRight /></a>
@@ -61,19 +60,7 @@ function Hero() {
         </Reveal>
 
         <Reveal className="hero-visual">
-          <div className="visual-glow" />
-          <div className="code-card code-top"><span>const</span> developer = <em>"MERN"</em>;</div>
-          <div className="code-card code-side"><span>01</span><br/>build<br/>ship<br/>iterate</div>
-          <div className="glass-orb">
-            <div className="orb-core" />
-            <div className="ring ring-a" />
-            <div className="ring ring-b" />
-            <div className="ring ring-c" />
-            <div className="orb-label"><small>FULL STACK</small><strong>AR</strong></div>
-          </div>
-          <div className="floating-chip chip-react">React.js</div>
-          <div className="floating-chip chip-node">Node.js</div>
-          <div className="floating-chip chip-mongo">MongoDB</div>
+          <AIOrb />
         </Reveal>
       </div>
       <div className="scroll-cue">SCROLL TO EXPLORE <span /></div>
@@ -280,6 +267,7 @@ function Footer() {
 
 export default function App() {
   useEffect(() => {
+    document.body.classList.add("reveal-enabled");
     const els = document.querySelectorAll(".reveal");
     const observer = new IntersectionObserver(entries => entries.forEach(e => {
       if (e.isIntersecting) { e.target.classList.add("visible"); observer.unobserve(e.target); }

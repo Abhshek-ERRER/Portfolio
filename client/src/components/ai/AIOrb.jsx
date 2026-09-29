@@ -131,11 +131,6 @@ export default function AIOrb() {
             }}
           />
         ))}
-
-        <div className="orb-label-wrap">
-          <div className="orb-label">IGRIS AI</div>
-          <div className="orb-status"><span className="orb-status__dot" /> Neural Core Online</div>
-        </div>
       </div>
     </button>
   );
